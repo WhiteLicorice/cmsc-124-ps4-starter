@@ -137,6 +137,12 @@ Every row below is a run that happened.
 |---|---|---|
 | Windows 11 24H2, Git Bash, `winget install --id SWI-Prolog.SWI-Prolog` | `SWI-Prolog version 10.0.2 for x64-win64` | `1/66` on the starter, `66/66` with the instructor solution |
 | WSL Ubuntu 24.04, `apt-get install swi-prolog` | `SWI-Prolog version 9.0.4 for x86_64-linux` | `1/66` on the starter, `66/66` with the instructor solution |
+| GitHub Actions, `ubuntu-latest`, `apt-get install swi-prolog-nox` | `SWI-Prolog version 9.0.4 for x86_64-linux` | `1/66` on the starter |
+| GitHub Actions, `macos-latest`, `brew install swi-prolog` | `SWI-Prolog version 10.0.2 for arm64-darwin` | `1/66` on the starter |
+| GitHub Actions, `windows-latest`, the official `swipl-10.0.2-1.x64.exe` installer with `/S` | `SWI-Prolog version 10.0.2 for x64-win64` | `1/66` on the starter |
 
+Two SWI-Prolog series grade this assignment, 9.0 and 10.0, and they agree.
 The grader re-derives all 48 published expectations before it scores anything,
 so a build that printed one answer differently would stop the run and say so.
+No runner has. `./run P01` and `./trace P07` also print the same lines on all
+three.
