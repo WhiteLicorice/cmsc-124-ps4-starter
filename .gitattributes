@@ -1,0 +1,11 @@
+# The run contract executes under bash on every platform, so it stays LF. A
+# CRLF checkout on Windows makes the shebang unreadable and ./check.sh fails
+# before the grader starts.
+run text eol=lf
+check.sh text eol=lf
+lint text eol=lf
+trace text eol=lf
+
+# The grader compares these tables field by field.
+*.tsv text eol=lf
+*.pl text
