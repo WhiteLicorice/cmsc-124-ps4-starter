@@ -1,11 +1,12 @@
 %%%% trace_case.pl -- what ./trace runs. It prints every port of one case's
-%%%% search, in order, until the search ends or the line budget runs out.
+%%%% search, in order, until the search ends or the line count reaches the
+%%%% budget.
 %%%%
 %%%% This is the four-port box model that swipl's own debugger uses, with
-%%%% the keystrokes removed. Each goal has four doors. Call is the first
-%%%% time the goal is tried. Exit is the goal succeeding with the bindings
-%%%% shown. Redo is the search coming back to try the goal's next clause
-%%%% after something later failed. Fail is the goal running out of clauses.
+%%%% the keystrokes removed. Each goal has four doors. Call is the goal on
+%%%% its first try. Exit is the goal succeeding with the bindings shown. Redo
+%%%% is the search that returns to try the goal's next clause after a later
+%%%% goal failed. Fail is the goal with no clauses left.
 %%%% Indentation is the depth of the goal below the query.
 %%%%
 %%%% You never edit this file. Part 3 asks you to paste one of its outputs
@@ -14,8 +15,8 @@
 :- initialization(main, main).
 :- ensure_loaded('support.pl').
 
-% How many port lines to print before giving up on a search that has not
-% ended. Every finite case in the corpus prints far fewer than this.
+% How many port lines to print before the tracer stops a search that did
+% not end. Every finite case in the corpus prints far fewer than this.
 ps4_line_budget(400).
 
 main([Id]) :-
@@ -52,7 +53,7 @@ ps4_trace_all(Goal, Names) :-
 
 ps4_trace_stopped(ps4_line_budget(Lines), _) :-
     !,
-    format("stopped after ~d lines. The search had not ended.~n", [Lines]),
+    format("stopped after ~d lines. The search did not end.~n", [Lines]),
     format("Read the goal that repeats.~n").
 ps4_trace_stopped(Error, _) :-
     format("error: the search stopped with an error.~n"),
@@ -60,7 +61,7 @@ ps4_trace_stopped(Error, _) :-
 
 %%% The solver. true and a conjunction have no ports of their own. Every
 %%% other goal passes through Call, then Exit or Fail, and through Redo
-%%% each time the search comes back for another clause.
+%%% each time the search returns for another clause.
 
 ps4_solve(true, _, _) :-
     !.
@@ -80,9 +81,9 @@ ps4_solve(Goal, Depth, Names) :-
         fail
     ).
 
-% A goal defined by clauses in the knowledge base is resolved one clause
-% at a time, so its body's goals get ports of their own. Anything else,
-% such as =, >, and is, is a built-in and runs as one step.
+% The solver resolves a goal that has clauses one clause at a time, so the
+% goals in its body get ports of their own. Anything else, such as =, >,
+% and is, is a built-in and runs as one step.
 ps4_step(Goal, Depth, Names) :-
     ps4_has_clauses(Goal),
     !,
@@ -111,8 +112,8 @@ ps4_port(Port, Depth, Goal, Names) :-
         format("~*c[~d] ~s: ~s~n", [Indent, 0' , Depth, Port, Text])
     ).
 
-% Indentation stops growing past this depth and a [depth] marker takes
-% over, so a search that keeps going deeper stays on the screen.
+% Indentation stops growing past this depth and a [depth] marker replaces
+% it, so a search that goes deeper stays on the screen.
 ps4_indent_limit(16).
 
 % Print the goal with the query's variable names where they apply and _

@@ -2,9 +2,9 @@
 %%%% budget that turns a search that never ends into the word unbounded.
 %%%%
 %%%% The grader re-derives every published expectation through these
-%%%% predicates before it scores a single check, so a change here that
-%%%% disagrees with tests/expected.tsv stops the run instead of grading
-%%%% against a stale table.
+%%%% predicates before it scores a single check. So a change here that
+%%%% disagrees with tests/expected.tsv stops the run. The grader never
+%%%% scores against a stale table.
 
 :- ensure_loaded('../cases/kb.pl').
 :- ensure_loaded('../cases/cases.pl').
@@ -13,7 +13,7 @@ ps4_fields(["first", "second", "count"]).
 
 %% ps4_budget(-Inferences)
 %
-% How much work one query may do before the enumerator gives up and
+% How much work one query may do before the enumerator stops and
 % reports unbounded. Every finite case in the corpus finishes in well under
 % a thousand inferences. A search that is still running after this many is
 % one that will not end, or one that will fill memory first. Both read
@@ -24,7 +24,7 @@ ps4_budget(200000).
 %
 % The goal behind a case id, and the variable names as written in the case
 % text, as a list of Name=Variable pairs. Id may be an atom or a string.
-% Fails for an unknown id.
+% The predicate fails for an unknown id.
 ps4_query(Id, Goal, Names) :-
     text_to_string(Id, IdText),
     ps4_case(IdText, Text),
@@ -66,9 +66,9 @@ ps4_binding_text(Name=Value, Part) :-
 %   second  the second answer, or none when there is no second one
 %   count   how many answers backtracking finds before the search ends
 %
-% When the query throws an error, all three read error. When the budget
-% runs out, count reads unbounded, and so does any answer the search had
-% not reached by then.
+% When the query throws an error, all three read error. When the search
+% reaches the budget, count reads unbounded, and so does any answer the
+% search did not reach before then.
 ps4_describe(Id, [First, Second, Count]) :-
     ps4_query(Id, Goal, Names),
     ps4_budget(Budget),
@@ -98,8 +98,9 @@ ps4_enumerate(Goal, Names) :-
     ;   true
     ).
 
-% Keep the first two answers as text. The rest only get counted. nb_setval
-% copies its value, so the list survives the backtracking that follows.
+% Keep the first two answers as text. Count the rest without keeping them.
+% nb_setval copies its value, so the list survives the backtracking that
+% follows.
 ps4_record(Names) :-
     flag(ps4_answers, N, N + 1),
     (   N < 2

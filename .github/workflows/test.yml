@@ -12,8 +12,8 @@ jobs:
       - uses: actions/checkout@v7
 
       # The only setup action for SWI-Prolog supports Linux alone, so each
-      # runner installs it by hand, the way the manual has students do.
-      # Ubuntu's package is the 9.0 series and the other two are 10.0. The
+      # runner installs it with a shell step, the way the manual has students
+      # do. Ubuntu's package is the 9.0 series and the other two are 10.0. The
       # grader re-derives every published expectation before it scores, so a
       # build that printed one answer differently would stop the run and
       # say so.
@@ -28,7 +28,7 @@ jobs:
         run: brew install swi-prolog
 
       # The same installer winget fetches for students, run without its
-      # dialog. It does not add itself to PATH, so the last line does.
+      # dialog. It does not add itself to PATH, so the last line adds it.
       - name: Install SWI-Prolog (Windows)
         if: runner.os == 'Windows'
         shell: pwsh

@@ -30,19 +30,19 @@ main(_) :-
 
 %% ps4_abort(+Format, +Arguments)
 %
-% Stop before any check is scored. A run that ends without a == result ==
-% line never scored anything.
+% Stop before the grader scores any check. A run that ends without a
+% == result == line never scored anything.
 ps4_abort(Format, Arguments) :-
     format(user_error, Format, Arguments),
     nl(user_error),
     halt(1).
 
 %%% A form fault in predictions.tsv survives the parse and then fails its
-%%% comparison, which reads like a wrong prediction rather than a stray
-%%% space. Name the faults before scoring so nobody hunts for a search rule
-%%% they already understood. Only malformations are listed. A cell still
-%%% reading TODO already shows as a failed check, and on a fresh starter
-%%% every cell does.
+%%% comparison. That failure reads like a wrong prediction. Report the
+%%% faults before scoring so nobody hunts for a search rule they already
+%%% understood. The list holds malformations only. A cell that still reads
+%%% TODO already shows as a failed check. On a fresh starter every cell
+%%% reads TODO.
 
 ps4_report_form_faults :-
     ps4_validate_predictions('predictions.tsv', Problems, _),
@@ -97,7 +97,7 @@ ps4_check_corpus_ids([_|Rows]) :-
 
 %%% Re-derive every published expectation before scoring anything against
 %%% it. A stale tests/expected.tsv would otherwise grade a correct
-%%% prediction as wrong, and the pair would never find out why.
+%%% prediction as wrong, and the pair would never learn why.
 
 ps4_check_no_drift([_|Rows]) :-
     ps4_fields(Fields),
@@ -118,9 +118,9 @@ ps4_check_no_drift([_|Rows]) :-
 %% ps4_check(+Label, +Goal)
 %
 % Score one check. Goal runs under double negation so that a binding it
-% makes stays inside it. Every R check lives in one clause body, so a
-% variable such as N is shared between them, and the first check that
-% bound it would otherwise decide the rest.
+% makes stays inside it. Every R check lives in one clause body, so the
+% checks share a variable such as N. Without the double negation, the first
+% check that bound it would decide the rest.
 ps4_check(Label, Goal) :-
     flag(ps4_total, T, T + 1),
     (   catch(\+ \+ Goal, Error, ( nb_setval(ps4_error, Error), fail ))
@@ -231,8 +231,8 @@ ps4_score_rules :-
                   msort(Pairs, Sorted),
                   Sorted == [ann-pat, bob-liz, liz-bob, pat-ann]
               )),
-    % The goal-order trap. X \= Y before X and Y are bound fails on the
-    % spot, and this query then answers nothing.
+    % The goal-order trap. X \= Y before X and Y are bound fails at once,
+    % and this query then answers nothing.
     ps4_check('R1.sibling_of_ann',
               (   findall(X, sibling(ann, X), Siblings),
                   Siblings == [pat]
@@ -285,7 +285,7 @@ ps4_score_rules :-
               )),
 
     % R3 -- the graph. Every check runs under the budget, because a route
-    % without a visited list goes round the cycle forever.
+    % without a visited list circles the cycle without end.
     ps4_check('R3.route_a_to_d',
               (   ps4_bounded(once(route(a, d, P))),
                   P == [a, b, c, d]
@@ -302,7 +302,7 @@ ps4_score_rules :-
     ps4_check('R3.route_no_way_back',
               ps4_bounded(\+ route(d, a, _))).
 
-%%% Part 3 -- the written comparison.
+%%% Part 3 -- the analysis.
 
 ps4_score_analysis :-
     format("~n== analysis ==~n"),
@@ -317,8 +317,8 @@ ps4_score_analysis :-
 
 %% ps4_prose_word_count(+Text, -Words)
 %
-% Count space-separated tokens, skipping the lines a pasted ./trace
-% produces, so the trace you are asked to paste costs you no words.
+% Count space-separated tokens. Skip the lines a pasted ./trace produces,
+% so the trace costs you no words.
 ps4_prose_word_count(Text, Words) :-
     split_string(Text, "\n", "\r", Lines),
     exclude(ps4_trace_line, Lines, Prose),

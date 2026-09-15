@@ -21,7 +21,7 @@ main(_) :-
     ),
     (   Problems == [], Todos == []
     ->  format("predictions.tsv is well formed and complete.~n"),
-        format("This read the table's shape only. It says nothing about whether an answer is right.~n"),
+        format("./lint checked the table's form only. It says nothing about whether an answer is right.~n"),
         halt(0)
     ;   nl,
         (   Problems \== []

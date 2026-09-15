@@ -1,9 +1,9 @@
 %%%% cases.pl -- the sixteen queries of the prediction table.
 %%%%
-%%%% Each query is stored as the text you would type at the ?- prompt, so
-%%%% the variable names you see here are the names the grader prints.
-%%%% Every case stands on its own. None depends on another having run first,
-%%%% so ./run and ./trace work on any id in any order.
+%%%% The file stores each query as the text you would type at the ?- prompt.
+%%%% The variable names you see here are the names the grader prints.
+%%%% No case depends on another case. ./run and ./trace accept any id in any
+%%%% order.
 
 ps4_case("P01", "parent(tom, X)").
 ps4_case("P02", "parent(tom, bob)").

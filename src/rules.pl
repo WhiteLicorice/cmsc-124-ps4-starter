@@ -1,14 +1,14 @@
 %%%% rules.pl -- Part 2. Write the seven predicates below.
 %%%%
-%%%% The facts and given rules in cases/kb.pl are loaded before this file,
-%%%% so parent/2, edge/2, elem/2, join/3, and len/2 are yours to call. The
-%%%% grader scores R1, R2, and R3 separately, so finish them in order and
+%%%% The grader loads the facts and given rules in cases/kb.pl before this
+%%%% file, so parent/2, edge/2, elem/2, join/3, and len/2 are yours to call.
+%%%% The grader scores R1, R2, and R3 separately. Finish them in order. You
 %%%% keep every group you get right.
 %%%%
-%%%% Each stub below throws so that a check you have not reached fails with
-%%%% a message that names the predicate. Replace the whole stub, head and
+%%%% Each stub below throws, so a check you did not reach fails with a
+%%%% message that identifies the predicate. Replace the whole stub, head and
 %%%% body, with your own clauses. A stub left above your clauses runs first
-%%%% and throws before yours are ever tried.
+%%%% and throws before Prolog tries yours.
 
 %%% R1 -- the family.
 
@@ -39,7 +39,7 @@ count_of(_, _, _) :-
     throw(not_implemented(count_of/3)).
 
 % rev(List, Reversed): Reversed holds the elements of List in the other
-% order. Reverse the tail, then join/3 the head on at the end.
+% order. Reverse the tail. Then use join/3 to put the head at the end.
 rev(_, _) :-
     throw(not_implemented(rev/2)).
 
@@ -54,10 +54,9 @@ last_of(_, _) :-
 % order, following edge/2 and never visiting a node twice. A route from a
 % node to itself is [From].
 %
-% reach/2 in cases/kb.pl walks the same graph and never comes home,
-% because the cycle a -> b -> c -> a always offers one more edge. Carry
-% the nodes you have visited and refuse to step onto one again. \+ Goal
-% is true when Goal cannot be proved, which is how you say "not yet
-% visited."
+% reach_r/2 in cases/kb.pl walks the same graph and never ends, because
+% the cycle a -> b -> c -> a always offers one more edge. Carry the nodes
+% you visited. Refuse to step onto one again. \+ Goal is true when Goal
+% cannot be proved. That is how you say "not yet visited."
 route(_, _, _) :-
     throw(not_implemented(route/3)).

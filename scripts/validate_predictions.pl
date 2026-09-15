@@ -5,10 +5,9 @@
 %%%% what makes it safe to run before the prediction commit.
 %%%%
 %%%% It reads raw lines rather than parsed fields, because the parse hides
-%%%% the faults it looks for. A padded cell survives the parse and then
-%%%% fails its comparison, which reads like a wrong prediction rather than
-%%%% a stray space. One trailing space per line fails all 16 count checks
-%%%% that way.
+%%%% the faults it checks. A padded cell survives the parse and then fails
+%%%% its comparison. That failure reads like a wrong prediction. One trailing
+%%%% space per line fails all 16 count checks that way.
 
 ps4_columns(["id", "first", "second", "count"]).
 
@@ -18,8 +17,8 @@ ps4_ids(Ids) :-
 %% ps4_read_lines(+Path, -Lines)
 %
 % Every line of Path as a string, or the atom missing when the file is not
-% there. A trailing carriage return is stripped, because a CRLF file grades
-% correctly and is not a fault. So are blank lines at the end.
+% there. The reader strips a trailing carriage return, because a CRLF file
+% grades correctly. It also strips blank lines at the end of the file.
 ps4_read_lines(Path, Lines) :-
     (   exists_file(Path)
     ->  read_file_to_string(Path, Text, []),
@@ -112,7 +111,7 @@ ps4_one_row(Line, LineNumber, RowNumber, Columns, Ids, Problems, Todos) :-
     length(Columns, Expected),
     format(string(Label), "line ~d", [LineNumber]),
     (   Found =\= Expected
-    ->  format(string(P), "~s: found ~d fields, expected ~d. Separate the columns with one tab each and use no tab anywhere else. An editor set to insert spaces instead of tabs lands here.",
+    ->  format(string(P), "~s: found ~d fields, expected ~d. Separate the columns with one tab each. Use no tab anywhere else. An editor that inserts spaces instead of tabs causes this fault.",
                [Label, Found, Expected]),
         Problems = [P],
         Todos = []
@@ -121,7 +120,7 @@ ps4_one_row(Line, LineNumber, RowNumber, Columns, Ids, Problems, Todos) :-
         ps4_trim(RawId, FoundId),
         (   nth1(RowNumber, Ids, WantedId),
             FoundId \== WantedId
-        ->  format(string(IdP), "~s: the id reads \"~s\". Row ~d must be ~s, and all 16 ids stay in order.",
+        ->  format(string(IdP), "~s: the id reads \"~s\". Row ~d must be ~s. All 16 ids stay in order.",
                    [Label, FoundId, RowNumber, WantedId]),
             IdProblems = [IdP]
         ;   IdProblems = []

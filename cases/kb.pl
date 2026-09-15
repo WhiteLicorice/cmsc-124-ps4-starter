@@ -1,9 +1,9 @@
 %%%% kb.pl -- the knowledge base every Part 1 query runs against.
 %%%%
 %%%% Nothing here uses a cut or negation. The tracer behind ./trace walks
-%%%% clauses one at a time and reports every port, and a cut would let a
-%%%% clause skip ports the tracer cannot see. Part 2 may use \+ in route/3,
-%%%% which is graded on answers and never traced.
+%%%% clauses one at a time and reports every port. A cut would let a clause
+%%%% skip ports the tracer cannot see. Part 2 may use \+ in route/3. The
+%%%% grader scores route/3 on answers and never traces it.
 %%%%
 %%%% Facts are listed in the order Prolog tries them. That order is part of
 %%%% what you predict.
@@ -52,22 +52,22 @@ edge(b, c).
 edge(c, a).
 edge(c, d).
 
-% Left recursion. The recursive call comes before any edge is looked at.
+% Left recursion. The recursive call comes before the rule reads any edge.
 reach(X, Y) :-
     reach(X, Z),
     edge(Z, Y).
 reach(X, Y) :-
     edge(X, Y).
 
-% Right recursion. An edge is taken before the recursive call.
+% Right recursion. The rule reads one edge before the recursive call.
 reach_r(X, Y) :-
     edge(X, Y).
 reach_r(X, Y) :-
     edge(X, Z),
     reach_r(Z, Y).
 
-%%% Lists, defined here rather than taken from the library so that ./trace
-%%% can show their clauses.
+%%% Lists. The file defines these list predicates instead of loading them
+%%% from the library, so ./trace can show their clauses.
 
 elem(X, [X|_]).
 elem(X, [_|T]) :-
