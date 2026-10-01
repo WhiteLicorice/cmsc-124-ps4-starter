@@ -329,9 +329,9 @@ ps4_prose_word_count(Text, Words) :-
 
 %% ps4_trace_line(+Line)
 %
-% True when Line comes from a pasted ./trace block. The tracer prints the
-% port lines and its own "error:" line. SWI prints "ERROR:" lines. Skip all
-% of them, so a pasted trace costs no words.
+% True when Line comes from a pasted ./trace block. The tracer prints port,
+% answer, and status lines, and its own "error:" line. SWI prints "ERROR:"
+% lines. Skip all of them, so a pasted trace costs no words.
 ps4_trace_line(Line) :-
     split_string(Line, "", " \t", [Trimmed]),
     ps4_strip_depth_marker(Trimmed, Rest),
