@@ -327,10 +327,15 @@ ps4_prose_word_count(Text, Words) :-
     exclude(==(""), Tokens, Kept),
     length(Kept, Words).
 
+%% ps4_trace_line(+Line)
+%
+% True when Line comes from a pasted ./trace block. The tracer prints the
+% port lines and its own "error:" line. SWI prints "ERROR:" lines. Skip all
+% of them, so a pasted trace costs no words.
 ps4_trace_line(Line) :-
     split_string(Line, "", " \t", [Trimmed]),
     ps4_strip_depth_marker(Trimmed, Rest),
-    member(Prefix, ["Call:", "Exit:", "Redo:", "Fail:", "answer ", "==", "stopped after", "Read the goal"]),
+    member(Prefix, ["Call:", "Exit:", "Redo:", "Fail:", "answer ", "==", "stopped after", "Read the goal", "error:", "ERROR:"]),
     string_concat(Prefix, _, Rest),
     !.
 
