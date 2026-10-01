@@ -10,6 +10,7 @@ Problem Set 4. The assignment manual defines the work and the submission rules.
 cases/kb.pl             the facts and given rules every query runs against
 cases/cases.pl          the 16 queries, as you would type them at the prompt
 predictions.tsv         your first, second, and count predictions
+REASONING.md            why each case gives its values, written before you run
 src/rules.pl            the seven predicates you implement
 tests/expected.tsv      every published expected result
 tests/check_all.pl      the complete public automated checker
@@ -19,8 +20,9 @@ run  trace  lint  check.sh   the course run contract
 
 ## First Run
 
-Fill `predictions.tsv`. Check its form with `./lint`. Commit it before you
-run a case. Then run one case, trace one case, or run all automated checks:
+Fill `predictions.tsv` and `REASONING.md`. Check the table's form with
+`./lint`. Commit both before you run a case. Then run one case, trace one
+case, or run all automated checks:
 
 ```bash
 ./lint
@@ -37,19 +39,19 @@ survive the parse and then fail their comparisons. Without `./lint` they read
 like wrong predictions. One trailing space per line fails all 16 `count`
 checks that way. `./check.sh` lists the same faults before it scores.
 
-A fresh starter reports `1/66 checks passed` and exits 1. A complete submission
-reports `66/66 checks passed` and exits 0. `check.sh` is the complete public
+A fresh starter reports `1/67 checks passed` and exits 1. A complete submission
+reports `67/67 checks passed` and exits 0. `check.sh` is the complete public
 automated check. The expected table and the checker are both in this
 repository. The assignment rubric separately assesses the written analysis,
 commit history, and workflow runs.
 
 ## Reading a First Run
 
-Read `1/66` as the starting state. The single pass is `rules_load`, which asks
+Read `1/67` as the starting state. The single pass is `rules_load`, which asks
 only whether `src/rules.pl` consults without a syntax error. The stubs satisfy
 that on the first commit. A stub that throws when called is still valid
-Prolog. Every prediction, every rule check, and the analysis check fail.
-Nothing is done yet.
+Prolog. Every prediction, every rule check, the reasoning check, and the
+analysis check fail. Nothing is done yet.
 
 The check is still useful. A consult reads one clause at a time, so a
 file that stops mid-clause leaves every clause above the fault defined and
@@ -75,6 +77,15 @@ A group you never reach costs you that group only. Deleting `route/3` leaves
 R1 and R2 at full marks and zeroes R3. Every R3 check runs under a budget of
 inferences, so a `route/3` that circles the cycle without end fails with a
 message instead of hanging the run.
+
+## The Reasoning File
+
+`REASONING.md` holds one entry per case, written before you run anything. The
+grader checks its structure only: one heading per case, `## P01` to `## P16`
+in order, a non-blank line under every heading, and no placeholder line left.
+It does not judge the quality of your reasoning and sets no word minimum.
+Commit the file with `predictions.tsv`. Add a correction entry under each case
+you got wrong after you run it.
 
 ## What `./trace` Prints
 
@@ -118,7 +129,7 @@ These codes are the course contract.
 
 | Code | Command | Meaning |
 |---|---|---|
-| 0 | `./check.sh` | all 66 checks passed |
+| 0 | `./check.sh` | all 67 checks passed |
 | 1 | `./check.sh` | at least one check failed, or the grader stopped early |
 | 0 | `./lint` | `predictions.tsv` is well formed and complete |
 | 1 | `./lint` | the table is malformed or still holds a TODO |
@@ -135,11 +146,11 @@ Every row below is a run that happened.
 
 | Environment | Version reported by `swipl --version` | Result |
 |---|---|---|
-| Windows 11 25H2, Git Bash, `winget install --id SWI-Prolog.SWI-Prolog` | `SWI-Prolog version 10.0.2 for x64-win64` | `1/66` on the starter, `66/66` with the instructor solution |
-| WSL Ubuntu 24.04, `apt-get install swi-prolog` | `SWI-Prolog version 9.0.4 for x86_64-linux` | `1/66` on the starter, `66/66` with the instructor solution |
-| GitHub Actions, `ubuntu-latest`, `apt-get install swi-prolog-nox` | `SWI-Prolog version 9.0.4 for x86_64-linux` | `1/66` on the starter |
-| GitHub Actions, `macos-latest`, `brew install swi-prolog` | `SWI-Prolog version 10.0.2 for arm64-darwin` | `1/66` on the starter |
-| GitHub Actions, `windows-latest`, the official `swipl-10.0.2-1.x64.exe` installer with `/S` | `SWI-Prolog version 10.0.2 for x64-win64` | `1/66` on the starter |
+| Windows 11 25H2, Git Bash, `winget install --id SWI-Prolog.SWI-Prolog` | `SWI-Prolog version 10.0.2 for x64-win64` | `1/67` on the starter, `67/67` with the instructor solution |
+| WSL Ubuntu 24.04, `apt-get install swi-prolog` | `SWI-Prolog version 9.0.4 for x86_64-linux` | `1/67` on the starter, `67/67` with the instructor solution |
+| GitHub Actions, `ubuntu-latest`, `apt-get install swi-prolog-nox` | `SWI-Prolog version 9.0.4 for x86_64-linux` | `1/67` on the starter |
+| GitHub Actions, `macos-latest`, `brew install swi-prolog` | `SWI-Prolog version 10.0.2 for arm64-darwin` | `1/67` on the starter |
+| GitHub Actions, `windows-latest`, the official `swipl-10.0.2-1.x64.exe` installer with `/S` | `SWI-Prolog version 10.0.2 for x64-win64` | `1/67` on the starter |
 
 Two SWI-Prolog series grade this assignment, 9.0 and 10.0, and they agree.
 The grader re-derives all 48 published expectations before it scores anything,
