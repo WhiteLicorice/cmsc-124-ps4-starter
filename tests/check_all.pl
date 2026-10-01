@@ -350,7 +350,7 @@ ps4_strip_depth_marker(Line, Rest) :-
     ;   Rest = Line
     ).
 
-%%% Part 3 -- the prediction reasoning.
+%%% Part 1 -- the prediction reasoning.
 
 %% ps4_reasoning_ok
 %
@@ -398,7 +398,8 @@ ps4_heading_is(Line, Headings, Heading) :-
     Trimmed == Heading.
 
 % The headings found must be the expected ones, in order. A missing heading
-% stops and names the case. A heading out of order stops and names both.
+% stops and names the case. A heading out of order stops and names both. A
+% heading left over after ## P16 stops and names the extra one.
 ps4_rows_ok([], []).
 ps4_rows_ok([Heading|Headings], [row(Found, _)|Rows]) :-
     Found == Heading,
@@ -411,6 +412,10 @@ ps4_rows_ok([Heading|_], [row(Found, _)|_]) :-
     Found \== Heading,
     format(string(Text), "REASONING.md has the heading \"~s\" where \"~s\" must come next. Keep the case headings in order.",
            [Found, Heading]),
+    throw(Text).
+ps4_rows_ok([], [row(Extra, _)|_]) :-
+    format(string(Text), "REASONING.md has an extra heading \"~s\". Keep one heading for each case, P01 to P16.",
+           [Extra]),
     throw(Text).
 
 % Every section needs a non-blank line under its heading, and no section may

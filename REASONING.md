@@ -31,10 +31,13 @@ nothing and the search ends after one answer.
 ```
 
 ## P01
+
 Write one to three sentences here. Name the rule that fixes each field.
 
 ## P02
+
 Write one to three sentences here. Name the rule that fixes each field.
+
 ## P03
 
 Write one to three sentences here. Name the rule that fixes each field.
