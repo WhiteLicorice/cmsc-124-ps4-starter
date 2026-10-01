@@ -306,6 +306,8 @@ ps4_score_rules :-
 
 ps4_score_analysis :-
     format("~n== analysis ==~n"),
+    ps4_check(reasoning_written,
+              ps4_reasoning_ok),
     ps4_check(analysis_written,
               (   exists_file('ANALYSIS.md'),
                   read_file_to_string('ANALYSIS.md', Text, []),
@@ -347,3 +349,113 @@ ps4_strip_depth_marker(Line, Rest) :-
     ->  sub_string(Tail, _, After, 0, Rest)
     ;   Rest = Line
     ).
+
+%%% Part 3 -- the prediction reasoning.
+
+%% ps4_reasoning_ok
+%
+% The structure check for REASONING.md. It asks for one heading per case,
+% in order, with a non-blank line under each, and none of the template's
+% placeholder line left. It judges structure only. It sets no word minimum.
+ps4_reasoning_ok :-
+    (   exists_file('REASONING.md')
+    ->  read_file_to_string('REASONING.md', Text, []),
+        split_string(Text, "\n", "\r", Lines),
+        ps4_reasoning_check(Lines)
+    ;   throw("REASONING.md is missing. Add it before the prediction commit.")
+    ).
+
+ps4_reasoning_check(Lines) :-
+    ps4_expected_headings(Headings),
+    ps4_heading_rows(Lines, 1, Headings, Rows),
+    ps4_rows_ok(Headings, Rows),
+    ps4_sections_check(Lines, Rows).
+
+%% ps4_placeholder(+Line)
+%
+% The template's placeholder line. The check tests this exact literal, so a
+% student who leaves the template line in place fails like an empty section.
+ps4_placeholder(Line) :-
+    sub_string(Line, _, _, _, "Write one to three sentences here. Name the rule that fixes each field.").
+
+ps4_expected_headings(Headings) :-
+    findall(H, ( between(1, 16, N), format(string(H), "## P~|~`0t~d~2+", [N]) ), Headings).
+
+% row(Heading, LineNumber) for every line that is exactly one of the case
+% headings, in file order. A line that names no case heading is skipped.
+ps4_heading_rows([], _, _, []).
+ps4_heading_rows([Line|Rest], LineNo, Headings, Rows) :-
+    (   ps4_heading_is(Line, Headings, Heading)
+    ->  Rows = [row(Heading, LineNo)|More]
+    ;   Rows = More
+    ),
+    Next is LineNo + 1,
+    ps4_heading_rows(Rest, Next, Headings, More).
+
+ps4_heading_is(Line, Headings, Heading) :-
+    split_string(Line, "", " \t", [Trimmed]),
+    member(Heading, Headings),
+    Trimmed == Heading.
+
+% The headings found must be the expected ones, in order. A missing heading
+% stops and names the case. A heading out of order stops and names both.
+ps4_rows_ok([], []).
+ps4_rows_ok([Heading|Headings], [row(Found, _)|Rows]) :-
+    Found == Heading,
+    ps4_rows_ok(Headings, Rows).
+ps4_rows_ok([Heading|_], []) :-
+    format(string(Text), "REASONING.md is missing the heading \"~s\". Add it and write the reasoning under it.",
+           [Heading]),
+    throw(Text).
+ps4_rows_ok([Heading|_], [row(Found, _)|_]) :-
+    Found \== Heading,
+    format(string(Text), "REASONING.md has the heading \"~s\" where \"~s\" must come next. Keep the case headings in order.",
+           [Found, Heading]),
+    throw(Text).
+
+% Every section needs a non-blank line under its heading, and no section may
+% still hold the template's placeholder line.
+ps4_sections_check(_, []).
+ps4_sections_check(Lines, [row(Heading, LineNo)|Rest]) :-
+    ps4_section(Lines, LineNo, Rest, Section),
+    (   member(Line, Section),
+        ps4_placeholder(Line)
+    ->  format(string(Text), "The placeholder is still under \"~s\" in REASONING.md. Replace it with the reasoning.",
+               [Heading]),
+        throw(Text)
+    ;   member(Line, Section),
+        ps4_nonblank(Line)
+    ->  true
+    ;   format(string(Text), "The section under \"~s\" in REASONING.md is empty. Write the reasoning there.", [Heading]),
+        throw(Text)
+    ),
+    ps4_sections_check(Lines, Rest).
+
+ps4_section(Lines, LineNo, Rest, Section) :-
+    (   Rest == []
+    ->  ps4_lines_after(Lines, LineNo, Section)
+    ;   Rest = [row(_, Next)|_],
+        Take is Next - LineNo - 1,
+        ps4_take_after(Lines, LineNo, Take, Section)
+    ).
+
+ps4_lines_after(Lines, 0, Lines) :-
+    !.
+ps4_lines_after([_|Rest], N, Tail) :-
+    N > 0,
+    Next is N - 1,
+    ps4_lines_after(Rest, Next, Tail).
+ps4_lines_after([], _, []).
+
+ps4_take_after(Lines, LineNo, Take, Section) :-
+    ps4_lines_after(Lines, LineNo, After),
+    length(After, Len),
+    (   Len > Take
+    ->  length(Section, Take),
+        append(Section, _, After)
+    ;   Section = After
+    ).
+
+ps4_nonblank(Line) :-
+    split_string(Line, "", " \t", [Trimmed]),
+    Trimmed \== "".
