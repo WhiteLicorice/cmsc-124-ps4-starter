@@ -261,9 +261,10 @@ ps4_score_rules :-
                       Sorted == [ann, bob, tom]
                   ))),
 
-    % R2 -- lists. The list checks ask for every answer, so a rule that
-    % answers again on backtracking fails instead of passing on its first
-    % answer alone.
+    % R2 -- lists. The count_of and last_of checks ask for every answer, so a
+    % rule that answers again on backtracking fails. The rev checks ask for the
+    % first answer only, because the manual says a rev that loops after a right
+    % first answer is correct.
     ps4_check('R2.count_of_present',
               ps4_bounded(
                   (   findall(N, count_of(a, [a, b, a], N), Counts),
@@ -281,8 +282,8 @@ ps4_score_rules :-
                   ))),
     ps4_check('R2.rev_forward',
               ps4_bounded(
-                  (   findall(R, rev([1, 2, 3], R), Reversals),
-                      Reversals == [[3, 2, 1]]
+                  (   once(rev([1, 2, 3], R)),
+                      R == [3, 2, 1]
                   ))),
     % Naive reverse run backward finds its first answer and then searches
     % forever for a second. The check asks for the first one only.
