@@ -249,7 +249,11 @@ ps4_score_rules :-
               ps4_bounded(
                   (   findall(X-Y, cousin(X, Y), Pairs),
                       sort(Pairs, Sorted),
-                      Sorted == [jim-sue, sue-jim]
+                      Sorted == [jim-sue, sue-jim],
+                      % Ground calls as well. Tom has no parent, and ann and
+                      % pat are siblings, so neither pair is a cousin pair.
+                      \+ cousin(tom, sue),
+                      \+ cousin(ann, pat)
                   ))),
     ps4_check('R1.descendants_of_tom',
               ps4_bounded(
