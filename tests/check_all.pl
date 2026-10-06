@@ -179,6 +179,60 @@ ps4_bounded(Goal) :-
     ;   true
     ).
 
+%% ps4_ground_agrees(?Template, :Goal, +Candidates, :Holds)
+%
+% Bind Template to each candidate in turn. Goal must succeed when Holds is
+% true and fail when it is not. Each call runs under its own budget. A clause
+% that fails for an unbound answer but accepts a wrong ground one passes an
+% enumeration of free answers. This check catches it.
+ps4_ground_agrees(Template, Goal, Candidates, Holds) :-
+    forall(member(Template, Candidates),
+           (   call(Holds)
+           ->  \+ \+ ps4_bounded(Goal)
+           ;   \+ ps4_bounded(Goal)
+           )).
+
+%% ps4_person_pairs(-Pairs)
+%
+% Every ordered pair of people in the family facts, a person with itself
+% included.
+ps4_person_pairs(Pairs) :-
+    setof(P, C^(parent(P, C) ; parent(C, P)), People),
+    findall(X-Y, (member(X, People), member(Y, People)), Pairs).
+
+%% ps4_route_candidates(-Candidates)
+%
+% Every From-To-Path with From and To nodes of the graph and Path a list of
+% one to five nodes, repeats allowed.
+ps4_route_candidates(Candidates) :-
+    setof(N, M^(edge(N, M) ; edge(M, N)), Nodes),
+    findall(From-To-Path,
+            (   member(From, Nodes),
+                member(To, Nodes),
+                between(1, 5, Length),
+                length(Path, Length),
+                ps4_all_from(Path, Nodes)
+            ),
+            Candidates).
+
+ps4_all_from([], _).
+ps4_all_from([X|Xs], Nodes) :-
+    member(X, Nodes),
+    ps4_all_from(Xs, Nodes).
+
+%% ps4_route_holds(+From, +To, +Path)
+%
+% Path starts at From, ends at To, follows edge/2, and repeats no node.
+ps4_route_holds(From, To, [From|Rest]) :-
+    last([From|Rest], To),
+    is_set([From|Rest]),
+    ps4_follows_edges([From|Rest]).
+
+ps4_follows_edges([_]).
+ps4_follows_edges([X, Y|Rest]) :-
+    edge(X, Y),
+    ps4_follows_edges([Y|Rest]).
+
 %%% Part 1 -- the prediction table.
 
 ps4_score_predictions([_|ExpectedRows], [_|PredictionRows]) :-
@@ -228,13 +282,19 @@ ps4_score_rules :-
     % R1 -- the family. Every check runs under the corpus budget, so a rule
     % that loops answers with a failed check instead of hanging the run. The
     % checks compare sets of answers, as R2 and R3 do. A right pair proved
-    % twice passes, and a wrong pair or a missing pair fails.
+    % twice passes, and a wrong pair or a missing pair fails. Each relation is
+    % also called on every ground pair of people, and must hold exactly for
+    % the right pairs.
     ps4_check('R1.sibling_pairs',
-              ps4_bounded(
-                  (   findall(X-Y, sibling(X, Y), Pairs),
-                      sort(Pairs, Sorted),
-                      Sorted == [ann-pat, bob-liz, liz-bob, pat-ann]
-                  ))),
+              (   ps4_bounded(
+                      (   findall(X-Y, sibling(X, Y), Pairs),
+                          sort(Pairs, Sorted),
+                          Sorted == [ann-pat, bob-liz, liz-bob, pat-ann]
+                      )),
+                  ps4_person_pairs(All),
+                  ps4_ground_agrees(A-B, sibling(A, B), All,
+                                    memberchk(A-B, [ann-pat, bob-liz, liz-bob, pat-ann]))
+              )),
     % The goal-order trap. X \= Y before X and Y are bound fails at once,
     % and this query then answers nothing.
     ps4_check('R1.sibling_of_ann',
@@ -246,21 +306,25 @@ ps4_score_rules :-
     ps4_check('R1.sibling_not_self',
               ps4_bounded(\+ sibling(ann, ann))),
     ps4_check('R1.cousin_pairs',
-              ps4_bounded(
-                  (   findall(X-Y, cousin(X, Y), Pairs),
-                      sort(Pairs, Sorted),
-                      Sorted == [jim-sue, sue-jim],
-                      % Ground calls as well. Tom has no parent, and ann and
-                      % pat are siblings, so neither pair is a cousin pair.
-                      \+ cousin(tom, sue),
-                      \+ cousin(ann, pat)
-                  ))),
+              (   ps4_bounded(
+                      (   findall(X-Y, cousin(X, Y), Pairs),
+                          sort(Pairs, Sorted),
+                          Sorted == [jim-sue, sue-jim]
+                      )),
+                  ps4_person_pairs(All),
+                  ps4_ground_agrees(A-B, cousin(A, B), All,
+                                    memberchk(A-B, [jim-sue, sue-jim]))
+              )),
+    % The supplied ancestor/2 is the same relation with its arguments swapped.
     ps4_check('R1.descendants_of_tom',
-              ps4_bounded(
-                  (   findall(X, descendant(X, tom), Descendants),
-                      sort(Descendants, Sorted),
-                      Sorted == [ann, bob, jim, liz, pat, sue]
-                  ))),
+              (   ps4_bounded(
+                      (   findall(X, descendant(X, tom), Descendants),
+                          sort(Descendants, Sorted),
+                          Sorted == [ann, bob, jim, liz, pat, sue]
+                      )),
+                  ps4_person_pairs(All),
+                  ps4_ground_agrees(D-A, descendant(D, A), All, ancestor(A, D))
+              )),
     ps4_check('R1.ancestors_of_sue',
               ps4_bounded(
                   (   findall(X, descendant(sue, X), Ancestors),
@@ -275,33 +339,49 @@ ps4_score_rules :-
     % be ground before the compare. Otherwise an unbound answer would unify
     % with the expected value and pass. The rev checks ask for the first
     % answer only, because the manual says a rev that loops after a right
-    % first answer is correct.
+    % first answer is correct. Each rule is also called with a ground answer
+    % from a short list of candidates, and must hold for the right one only.
     ps4_check('R2.count_of_present',
-              ps4_bounded(
-                  (   findall(N, count_of(a, [a, b, a], N), Counts),
-                      ground(Counts),
-                      sort(Counts, CountSet),
-                      CountSet == [2]
-                  ))),
+              (   ps4_bounded(
+                      (   findall(N, count_of(a, [a, b, a], N), Counts),
+                          ground(Counts),
+                          sort(Counts, CountSet),
+                          CountSet == [2]
+                      )),
+                  ps4_ground_agrees(G, count_of(a, [a, b, a], G),
+                                    [0, 1, 2, 3, 4], G == 2)
+              )),
     ps4_check('R2.count_of_absent',
-              ps4_bounded(
-                  (   findall(N, count_of(z, [a, b], N), Counts),
-                      ground(Counts),
-                      sort(Counts, CountSet),
-                      CountSet == [0]
-                  ))),
+              (   ps4_bounded(
+                      (   findall(N, count_of(z, [a, b], N), Counts),
+                          ground(Counts),
+                          sort(Counts, CountSet),
+                          CountSet == [0]
+                      )),
+                  ps4_ground_agrees(G, count_of(z, [a, b], G),
+                                    [0, 1, 2, 3], G == 0)
+              )),
     ps4_check('R2.count_of_empty',
-              ps4_bounded(
-                  (   findall(N, count_of(a, [], N), Counts),
-                      ground(Counts),
-                      sort(Counts, CountSet),
-                      CountSet == [0]
-                  ))),
+              (   ps4_bounded(
+                      (   findall(N, count_of(a, [], N), Counts),
+                          ground(Counts),
+                          sort(Counts, CountSet),
+                          CountSet == [0]
+                      )),
+                  ps4_ground_agrees(G, count_of(a, [], G), [0, 1, 2], G == 0)
+              )),
     ps4_check('R2.rev_forward',
-              ps4_bounded(
-                  (   once(rev([1, 2, 3], R)),
-                      R == [3, 2, 1]
-                  ))),
+              (   ps4_bounded(
+                      (   once(rev([1, 2, 3], R)),
+                          R == [3, 2, 1]
+                      )),
+                  ps4_ground_agrees(L, rev([1, 2, 3], L),
+                                    [[1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1],
+                                     [3, 1, 2], [3, 2, 1], [3, 2], [3, 2, 1, 1],
+                                     [1, 2, 3, 4], []],
+                                    L == [3, 2, 1]),
+                  ps4_ground_agrees(E, rev([], E), [[], [1]], E == [])
+              )),
     % Naive reverse run backward finds its first answer and then searches
     % forever for a second. The check asks for the first one only.
     ps4_check('R2.rev_backward_first',
@@ -309,17 +389,20 @@ ps4_score_rules :-
                   X == [2, 1]
               )),
     ps4_check('R2.last_of',
-              ps4_bounded(
-                  (   findall(L, last_of([1, 2, 3], L), Lasts),
-                      ground(Lasts),
-                      sort(Lasts, LastSet),
-                      LastSet == [3],
-                      findall(S, last_of([7], S), Singles),
-                      ground(Singles),
-                      sort(Singles, SingleSet),
-                      SingleSet == [7],
-                      \+ last_of([], _)
-                  ))),
+              (   ps4_bounded(
+                      (   findall(L, last_of([1, 2, 3], L), Lasts),
+                          ground(Lasts),
+                          sort(Lasts, LastSet),
+                          LastSet == [3],
+                          findall(S, last_of([7], S), Singles),
+                          ground(Singles),
+                          sort(Singles, SingleSet),
+                          SingleSet == [7],
+                          \+ last_of([], _)
+                      )),
+                  ps4_ground_agrees(V, last_of([1, 2, 3], V), [1, 2, 3, 4], V == 3),
+                  ps4_ground_agrees(W, last_of([7], W), [7, 8], W == 7)
+              )),
 
     % R3 -- the graph. Every check runs under the budget, because a route
     % without a visited list circles the cycle without end. The route checks
@@ -332,10 +415,16 @@ ps4_score_rules :-
               (   ps4_bounded(once(route(c, b, P))),
                   P == [c, a, b]
               )),
+    % This check also calls route/3 on every ground From, To, and Path of up
+    % to five nodes. It must hold exactly for the paths that follow edges and
+    % repeat no node.
     ps4_check('R3.routes_from_a_end',
               (   ps4_bounded(findall(X-P, route(a, X, P), Routes)),
                   sort(Routes, Sorted),
-                  Sorted == [a-[a], b-[a, b], c-[a, b, c], d-[a, b, c, d]]
+                  Sorted == [a-[a], b-[a, b], c-[a, b, c], d-[a, b, c, d]],
+                  ps4_route_candidates(Candidates),
+                  ps4_ground_agrees(F-T-Q, route(F, T, Q), Candidates,
+                                    ps4_route_holds(F, T, Q))
               )),
     ps4_check('R3.route_no_way_back',
               ps4_bounded(
