@@ -226,11 +226,13 @@ ps4_score_rules :-
               )),
 
     % R1 -- the family. Every check runs under the corpus budget, so a rule
-    % that loops answers with a failed check instead of hanging the run.
+    % that loops answers with a failed check instead of hanging the run. The
+    % checks compare sets of answers, as R2 and R3 do. A right pair proved
+    % twice passes, and a wrong pair or a missing pair fails.
     ps4_check('R1.sibling_pairs',
               ps4_bounded(
                   (   findall(X-Y, sibling(X, Y), Pairs),
-                      msort(Pairs, Sorted),
+                      sort(Pairs, Sorted),
                       Sorted == [ann-pat, bob-liz, liz-bob, pat-ann]
                   ))),
     % The goal-order trap. X \= Y before X and Y are bound fails at once,
@@ -238,14 +240,15 @@ ps4_score_rules :-
     ps4_check('R1.sibling_of_ann',
               ps4_bounded(
                   (   findall(X, sibling(ann, X), Siblings),
-                      Siblings == [pat]
+                      sort(Siblings, SiblingSet),
+                      SiblingSet == [pat]
                   ))),
     ps4_check('R1.sibling_not_self',
               ps4_bounded(\+ sibling(ann, ann))),
     ps4_check('R1.cousin_pairs',
               ps4_bounded(
                   (   findall(X-Y, cousin(X, Y), Pairs),
-                      msort(Pairs, Sorted),
+                      sort(Pairs, Sorted),
                       Sorted == [jim-sue, sue-jim]
                   ))),
     ps4_check('R1.descendants_of_tom',
