@@ -7,7 +7,7 @@
 %%%% It reads raw lines rather than parsed fields, because the parse hides
 %%%% the faults it checks. A padded cell survives the parse and then fails
 %%%% its comparison. That failure reads like a wrong prediction. One trailing
-%%%% space per line fails all 16 count checks that way.
+%%%% space on every answer row fails all 16 count checks that way.
 
 ps4_columns(["id", "first", "second", "count"]).
 

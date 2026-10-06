@@ -36,8 +36,8 @@ never runs a case, so it reveals no answers and is safe to run before the
 prediction commit. It catches a padded cell, a space inside an answer, a tab an
 editor replaced with spaces, and a missing or reordered row. All of those
 survive the parse and then fail their comparisons. Without `./lint` they read
-like wrong predictions. One trailing space per line fails all 16 `count`
-checks that way. `./check.sh` lists the same faults before it scores.
+like wrong predictions. One trailing space on every answer row fails all 16
+`count` checks that way. `./check.sh` lists the same faults before it scores.
 
 A fresh starter reports `1/67 checks passed` and exits 1. A complete submission
 reports `67/67 checks passed` and exits 0. `check.sh` is the complete public
