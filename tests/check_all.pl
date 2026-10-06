@@ -261,24 +261,26 @@ ps4_score_rules :-
                       Sorted == [ann, bob, tom]
                   ))),
 
-    % R2 -- lists. The count_of and last_of checks ask for every answer, so a
-    % rule that answers again on backtracking fails. The rev checks ask for the
-    % first answer only, because the manual says a rev that loops after a right
-    % first answer is correct.
+    % R2 -- lists. The count_of and last_of checks collect every answer and
+    % compare the set of values, so a rule that answers a wrong value on
+    % backtracking fails. A right value proved twice still passes, because the
+    % manual asks for the right relation, not for one proof. The rev checks ask
+    % for the first answer only, because the manual says a rev that loops after
+    % a right first answer is correct.
     ps4_check('R2.count_of_present',
               ps4_bounded(
                   (   findall(N, count_of(a, [a, b, a], N), Counts),
-                      Counts == [2]
+                      sort(Counts, [2])
                   ))),
     ps4_check('R2.count_of_absent',
               ps4_bounded(
                   (   findall(N, count_of(z, [a, b], N), Counts),
-                      Counts == [0]
+                      sort(Counts, [0])
                   ))),
     ps4_check('R2.count_of_empty',
               ps4_bounded(
                   (   findall(N, count_of(a, [], N), Counts),
-                      Counts == [0]
+                      sort(Counts, [0])
                   ))),
     ps4_check('R2.rev_forward',
               ps4_bounded(
@@ -294,7 +296,7 @@ ps4_score_rules :-
     ps4_check('R2.last_of',
               ps4_bounded(
                   (   findall(L, last_of([1, 2, 3], L), Lasts),
-                      Lasts == [3],
+                      sort(Lasts, [3]),
                       \+ last_of([], _)
                   ))),
 
