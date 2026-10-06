@@ -74,10 +74,11 @@ The grader scores `src/rules.pl` in three groups that stand on their own.
 | R2 | recursion over lists | `count_of/3`, `rev/2`, `last_of/2` |
 | R3 | a walk over the graph that ends, with a visited list | `route/3` |
 
-A group you never reach costs you that group only. Deleting `route/3` leaves
-R1 and R2 at full marks and zeroes R3. Every R3 check runs under a budget of
-inferences, so a `route/3` that circles the cycle without end fails with a
-message instead of hanging the run.
+Each group has its own checks. Deleting `route/3` leaves R1 and R2 at full
+marks and zeroes R3. A missing rule also fails each rule that calls it. If
+your `route/3` calls `rev/2`, deleting `rev/2` fails R3 too. Every check
+runs under a budget of inferences. A `route/3` that circles the cycle without
+end fails with a message. It does not stop the run.
 
 ## The Reasoning File
 

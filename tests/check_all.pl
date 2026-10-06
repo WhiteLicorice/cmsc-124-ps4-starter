@@ -251,36 +251,44 @@ ps4_score_rules :-
     ps4_check('R1.descendants_of_tom',
               ps4_bounded(
                   (   findall(X, descendant(X, tom), Descendants),
-                      msort(Descendants, Sorted),
+                      sort(Descendants, Sorted),
                       Sorted == [ann, bob, jim, liz, pat, sue]
                   ))),
     ps4_check('R1.ancestors_of_sue',
               ps4_bounded(
                   (   findall(X, descendant(sue, X), Ancestors),
-                      msort(Ancestors, Sorted),
+                      sort(Ancestors, Sorted),
                       Sorted == [ann, bob, tom]
                   ))),
 
     % R2 -- lists. The count_of and last_of checks collect every answer and
     % compare the set of values, so a rule that answers a wrong value on
     % backtracking fails. A right value proved twice still passes, because the
-    % manual asks for the right relation, not for one proof. The rev checks ask
-    % for the first answer only, because the manual says a rev that loops after
-    % a right first answer is correct.
+    % manual asks for the right relation, not for one proof. Each answer must
+    % be ground before the compare. Otherwise an unbound answer would unify
+    % with the expected value and pass. The rev checks ask for the first
+    % answer only, because the manual says a rev that loops after a right
+    % first answer is correct.
     ps4_check('R2.count_of_present',
               ps4_bounded(
                   (   findall(N, count_of(a, [a, b, a], N), Counts),
-                      sort(Counts, [2])
+                      ground(Counts),
+                      sort(Counts, CountSet),
+                      CountSet == [2]
                   ))),
     ps4_check('R2.count_of_absent',
               ps4_bounded(
                   (   findall(N, count_of(z, [a, b], N), Counts),
-                      sort(Counts, [0])
+                      ground(Counts),
+                      sort(Counts, CountSet),
+                      CountSet == [0]
                   ))),
     ps4_check('R2.count_of_empty',
               ps4_bounded(
                   (   findall(N, count_of(a, [], N), Counts),
-                      sort(Counts, [0])
+                      ground(Counts),
+                      sort(Counts, CountSet),
+                      CountSet == [0]
                   ))),
     ps4_check('R2.rev_forward',
               ps4_bounded(
@@ -296,12 +304,19 @@ ps4_score_rules :-
     ps4_check('R2.last_of',
               ps4_bounded(
                   (   findall(L, last_of([1, 2, 3], L), Lasts),
-                      sort(Lasts, [3]),
+                      ground(Lasts),
+                      sort(Lasts, LastSet),
+                      LastSet == [3],
+                      findall(S, last_of([7], S), Singles),
+                      ground(Singles),
+                      sort(Singles, SingleSet),
+                      SingleSet == [7],
                       \+ last_of([], _)
                   ))),
 
     % R3 -- the graph. Every check runs under the budget, because a route
-    % without a visited list circles the cycle without end.
+    % without a visited list circles the cycle without end. The route checks
+    % compare sets of paths, as R1 and R2 compare sets of values.
     ps4_check('R3.route_a_to_d',
               (   ps4_bounded(once(route(a, d, P))),
                   P == [a, b, c, d]
@@ -312,14 +327,15 @@ ps4_score_rules :-
               )),
     ps4_check('R3.routes_from_a_end',
               (   ps4_bounded(findall(X-P, route(a, X, P), Routes)),
-                  msort(Routes, Sorted),
+                  sort(Routes, Sorted),
                   Sorted == [a-[a], b-[a, b], c-[a, b, c], d-[a, b, c, d]]
               )),
     ps4_check('R3.route_no_way_back',
               ps4_bounded(
                   (   \+ route(d, a, _),
                       findall(P, route(d, d, P), Home),
-                      Home == [[d]]
+                      sort(Home, HomeSet),
+                      HomeSet == [[d]]
                   ))).
 
 %%% Part 3 -- the analysis.
