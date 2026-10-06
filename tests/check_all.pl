@@ -316,7 +316,11 @@ ps4_score_rules :-
                   Sorted == [a-[a], b-[a, b], c-[a, b, c], d-[a, b, c, d]]
               )),
     ps4_check('R3.route_no_way_back',
-              ps4_bounded(\+ route(d, a, _))).
+              ps4_bounded(
+                  (   \+ route(d, a, _),
+                      findall(P, route(d, d, P), Home),
+                      Home == [[d]]
+                  ))).
 
 %%% Part 3 -- the analysis.
 
