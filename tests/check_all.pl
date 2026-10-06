@@ -225,53 +225,65 @@ ps4_score_rules :-
               ;   true
               )),
 
-    % R1 -- the family.
+    % R1 -- the family. Every check runs under the corpus budget, so a rule
+    % that loops answers with a failed check instead of hanging the run.
     ps4_check('R1.sibling_pairs',
-              (   findall(X-Y, sibling(X, Y), Pairs),
-                  msort(Pairs, Sorted),
-                  Sorted == [ann-pat, bob-liz, liz-bob, pat-ann]
-              )),
+              ps4_bounded(
+                  (   findall(X-Y, sibling(X, Y), Pairs),
+                      msort(Pairs, Sorted),
+                      Sorted == [ann-pat, bob-liz, liz-bob, pat-ann]
+                  ))),
     % The goal-order trap. X \= Y before X and Y are bound fails at once,
     % and this query then answers nothing.
     ps4_check('R1.sibling_of_ann',
-              (   findall(X, sibling(ann, X), Siblings),
-                  Siblings == [pat]
-              )),
+              ps4_bounded(
+                  (   findall(X, sibling(ann, X), Siblings),
+                      Siblings == [pat]
+                  ))),
     ps4_check('R1.sibling_not_self',
-              \+ sibling(ann, ann)),
+              ps4_bounded(\+ sibling(ann, ann))),
     ps4_check('R1.cousin_pairs',
-              (   findall(X-Y, cousin(X, Y), Pairs),
-                  msort(Pairs, Sorted),
-                  Sorted == [jim-sue, sue-jim]
-              )),
+              ps4_bounded(
+                  (   findall(X-Y, cousin(X, Y), Pairs),
+                      msort(Pairs, Sorted),
+                      Sorted == [jim-sue, sue-jim]
+                  ))),
     ps4_check('R1.descendants_of_tom',
-              (   findall(X, descendant(X, tom), Descendants),
-                  msort(Descendants, Sorted),
-                  Sorted == [ann, bob, jim, liz, pat, sue]
-              )),
+              ps4_bounded(
+                  (   findall(X, descendant(X, tom), Descendants),
+                      msort(Descendants, Sorted),
+                      Sorted == [ann, bob, jim, liz, pat, sue]
+                  ))),
     ps4_check('R1.ancestors_of_sue',
-              (   findall(X, descendant(sue, X), Ancestors),
-                  msort(Ancestors, Sorted),
-                  Sorted == [ann, bob, tom]
-              )),
+              ps4_bounded(
+                  (   findall(X, descendant(sue, X), Ancestors),
+                      msort(Ancestors, Sorted),
+                      Sorted == [ann, bob, tom]
+                  ))),
 
-    % R2 -- lists.
+    % R2 -- lists. The list checks ask for every answer, so a rule that
+    % answers again on backtracking fails instead of passing on its first
+    % answer alone.
     ps4_check('R2.count_of_present',
-              (   once(count_of(a, [a, b, a], N)),
-                  N == 2
-              )),
+              ps4_bounded(
+                  (   findall(N, count_of(a, [a, b, a], N), Counts),
+                      Counts == [2]
+                  ))),
     ps4_check('R2.count_of_absent',
-              (   once(count_of(z, [a, b], N)),
-                  N == 0
-              )),
+              ps4_bounded(
+                  (   findall(N, count_of(z, [a, b], N), Counts),
+                      Counts == [0]
+                  ))),
     ps4_check('R2.count_of_empty',
-              (   once(count_of(a, [], N)),
-                  N == 0
-              )),
+              ps4_bounded(
+                  (   findall(N, count_of(a, [], N), Counts),
+                      Counts == [0]
+                  ))),
     ps4_check('R2.rev_forward',
-              (   once(rev([1, 2, 3], R)),
-                  R == [3, 2, 1]
-              )),
+              ps4_bounded(
+                  (   findall(R, rev([1, 2, 3], R), Reversals),
+                      Reversals == [[3, 2, 1]]
+                  ))),
     % Naive reverse run backward finds its first answer and then searches
     % forever for a second. The check asks for the first one only.
     ps4_check('R2.rev_backward_first',
@@ -279,10 +291,11 @@ ps4_score_rules :-
                   X == [2, 1]
               )),
     ps4_check('R2.last_of',
-              (   once(last_of([1, 2, 3], L)),
-                  L == 3,
-                  \+ last_of([], _)
-              )),
+              ps4_bounded(
+                  (   findall(L, last_of([1, 2, 3], L), Lasts),
+                      Lasts == [3],
+                      \+ last_of([], _)
+                  ))),
 
     % R3 -- the graph. Every check runs under the budget, because a route
     % without a visited list circles the cycle without end.
