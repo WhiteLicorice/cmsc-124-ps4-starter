@@ -16,7 +16,8 @@ ps4_fields(["first", "second", "count"]).
 % How much work one query may do before the enumerator stops and
 % reports unbounded. Every finite case in the corpus finishes in under 130
 % inferences. The first case in a process also pays for library autoloading
-% inside the limit, 1287 inferences on SWI-Prolog 10.0.2 and 16171 on 9.0.4.
+% inside the limit. Whichever case runs first, that costs at most 1342
+% inferences on SWI-Prolog 10.0.2 and 16224 on 9.0.4.
 % A search that is still running after this many is one that will not end,
 % or one that will fill memory first. Both read unbounded.
 ps4_budget(200000).
