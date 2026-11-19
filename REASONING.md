@@ -32,7 +32,7 @@ nothing and the search ends after one answer.
 
 ## P01
 
-Write one to three sentences here. Name the rule that fixes each field.
+The goal scans the parent facts in source order, so the first one with tom first binds X to liz. The first `;` backtracks to that point, undoes X=liz, and takes the next match, X=bob. No fact remains after that, so search ends and the count is 2.
 
 ## P02
 
