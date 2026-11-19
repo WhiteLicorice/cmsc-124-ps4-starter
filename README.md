@@ -4,6 +4,13 @@
 This repository holds the Prolog prediction corpus and the rule stubs for
 Problem Set 4. The assignment manual defines the work and the submission rules.
 
+## Members
+
+| Name | GitHub |
+|---|---|
+| Andrian Lloyd Maagma | [@andrianllmm](https://github.com/andrianllmm) |
+| Ralph Ryan Escabarte | [@RalphREE](https://github.com/RalphREE) |
+
 ## Layout
 
 ```text
