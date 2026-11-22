@@ -58,14 +58,13 @@ a and b are distinct constants, so the unification fails immediately, so first a
 
 For ann and pat, the condition that tom is the parent of bob was true, so they get binded to X, with a total count of 2. 
 
-<!-- ## P08
+P08
 
-Because ancestor tries its base clause before its recursive clause, Prolog yields direct parent matches in source order first (X=liz, then X=bob). Backtracking then explores recursive child paths without looping infinitely because the family tree is finite (or acyclic), eventually exhausting all valid descendants for count.
+because the ancestor puts first the base clause parent(A, D) before its recursive clause, checking the direct parent relationships in source order first. After the direct matches are exhausted, backtracking enters the recursive clause to do multi-step descendent branches through the finite family tree, and evaluates all valid answers with a total count of 6.
 
 ## P09
 
-Because ancestor_r places its recursive clause before its base clause. the language recurses into child branches before trying direct parent matches, reverrsing the answer order relative to ancestor. The order of goal execution and backtracking still visit every valid descendant in the finite family tree, so count matches ancestor's full finite count.  -->
-
+Because ancestor_r places its recursive clause before its base clause. the language recurses into child branches before trying direct parent matches, reversing the answer order relative to ancestor. Since the tree is fintie and acyclic, backtracking still visits every valid descendant, matching the total count of ancestor in P08 
 ## P10
 
 First is pat because the base clause runs first and matches parent(pat,jim). Backtracking into the recursive clause scans parent/2 from the top of kb.pl, finding parent(tom, bob) with ancestor(bob, jim) succeeding via pat before reaching parent(bob, pat). The count is 3 because Prolog finds X=pat, X=tom, and X=bob, then fails on further backtracking.
