@@ -17,7 +17,7 @@ ps4_case("P09", "ancestor_r(tom, X)").
 ps4_case("P10", "ancestor(X, jim)").
 ps4_case("P11", "reach(a, d)").
 ps4_case("P12", "reach_r(a, d)").
-ps4_case("P13", "len([a, b, c], N)").
+    ps4_case("P13", "len([a, b, c], N)").
 ps4_case("P14", "join(X, Y, [1, 2])").
 ps4_case("P15", "X > 2, elem(X, [1, 2, 3])").
 ps4_case("P16", "elem(X, [1, 2, 3]), X > 2").
