@@ -16,20 +16,27 @@
 %
 % Order matters. X \= Y succeeds only when X and Y are already bound to
 % different things, so put it after the goal that binds them.
-sibling(_, _) :-
-    throw(not_implemented(sibling/2)).
+sibling(X, Y) :-
+    parent(P, X),
+    parent(P, Y),
+    X \= Y.
 
 % cousin(X, Y): a parent of X and a parent of Y are siblings.
-cousin(_, _) :-
-    throw(not_implemented(cousin/2)).
-
+cousin(X, Y) :-
+    parent(PX, X),
+    parent(PY, Y),
+    sibling(PX, PY),
+    X \= Y.
 % descendant(D, A): A is an ancestor of D.
 %
 % Two clauses, the mirror image of ancestor/2 in cases/kb.pl. The base
 % clause reads one parent fact. The recursive clause reads one parent fact
 % and then asks a smaller question.
-descendant(_, _) :-
-    throw(not_implemented(descendant/2)).
+descendant(D, A) :-
+    parent(A, D).
+descendant(D, A) :-
+    parent(P, D),
+    descendant(P, A).
 
 %%% R2 -- lists.
 
