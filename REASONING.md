@@ -64,33 +64,51 @@ Write one to three sentences here. Name the rule that fixes each field.
 
 ## P09
 
-Write one to three sentences here. Name the rule that fixes each field.
+ancestor_r tries its recursive clause first, so the search goes down to the
+deepest person before anything comes out: sue under ann, then jim under pat.
+Each person's direct children come out after the branches below them, and the
+set is the same six people as P08, so the count is 6.
 
 ## P10
 
-Write one to three sentences here. Name the rule that fixes each field.
+ancestor tries its base clause first, so parent(pat, jim) gives X=pat. The
+recursive clause then goes through the parent lines in file order, giving tom
+(through bob) and then bob (through pat). So first is X=pat, second is X=tom,
+and the count is 3.
 
 ## P11
 
-Write one to three sentences here. Name the rule that fixes each field.
+The first clause of reach is the recursive one, and its first goal is reach(a,Z),
+the same call before any edge is read. It repeats forever and never finds an
+answer, so first, second and count are all unbounded.
 
 ## P12
 
-Write one to three sentences here. Name the rule that fixes each field.
+reach_r reads an edge before it recurses, so the search reaches d through a, b,
+c and finds true at once. On ; it goes back into c, takes edge(c,a), and the
+cycle repeats with no visited list, so second is true and the count is unbounded.
 
 ## P13
 
-Write one to three sentences here. Name the rule that fixes each field.
+len drops one item per call until [] gives 0, then each is adds 1 on the way
+back, so first is N=3. Only one clause fits each list shape, so second is none
+and the count is 1.
 
 ## P14
 
-Write one to three sentences here. Name the rule that fixes each field.
+join tries its base clause first, so X=[] and Y takes the whole list. Each
+round of the recursive clause moves one item from the front of the third list
+into X, giving X=[1] and then X=[1,2]. The list runs out after three splits, so
+the count is 3.
 
 ## P15
 
-Write one to three sentences here. Name the rule that fixes each field.
+Goals run left to right, so X > 2 runs before elem has given X a number. An
+unbound X makes > throw an instantiation error, so first, second and count are
+all error.
 
 ## P16
 
-Write one to three sentences here. Name the rule that fixes each field.
-
+Goals run left to right, so elem runs first and gives X the values 1, 2, 3 in
+turn. X > 2 is checked on each one. 1 and 2 fail and backtrack, and only 3
+passes. So first is X=3, there is no second answer, and count is 1.
