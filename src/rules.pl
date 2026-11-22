@@ -72,5 +72,15 @@ last_of(_, _) :-
 % you visited. Refuse to step onto one again. \+ Goal is true when Goal
 % cannot be proved. That is how you say "not yet visited."
 
-route(_, _, _) :-
-    throw(not_implemented(route/3)).
+route(From, To, Path) :-
+    travel(From, To, [From], Path).
+
+% base clause: current node is the target.
+travel(To, To, _, [To]).
+
+% recursive clause: take one edge to Next, refuse it if already visited, then continue from Next with Next added to Visited.
+% the head puts the current node in front of the path the recursive call returns, so Path comes out in forward order.
+travel(From, To, Visited, [From|Path]) :-
+    edge(From, Next),
+    \+ elem(Next, Visited),         % runs after edge/2, so Next is bound
+    travel(Next, To, [Next|Visited], Path).
