@@ -58,5 +58,22 @@ last_of(_, _) :-
 % the cycle a -> b -> c -> a always offers one more edge. Carry the nodes
 % you visited. Refuse to step onto one again. \+ Goal is true when Goal
 % cannot be proved. That is how you say "not yet visited."
-route(_, _, _) :-
-    throw(not_implemented(route/3)).
+route(From, To, Path) :-
+    travel(From, To, [From], Path).
+
+% travel(From, To, Visited, Path): Path goes from From to To.
+% Visited holds every node already on the walk, so we can't circle back.
+%
+% Path is built as the recursion returns ([From|Rest]), so it's already
+% in walk order and we don't need rev/2.
+
+% Base case: we've reached the target, so the path is just this node.
+travel(To, To, _, [To]).
+
+% Recursive case: take an edge to Next, make sure Next isn't visited yet,
+% then keep walking from Next. edge/2 goes first so Next is bound
+% before \+ checks it.
+travel(From, To, Visited, [From|Rest]) :-
+    edge(From, Next),
+    \+ elem(Next, Visited),
+    travel(Next, To, [Next|Visited], Rest).
