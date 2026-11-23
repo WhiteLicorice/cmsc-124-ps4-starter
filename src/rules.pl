@@ -40,13 +40,26 @@ count_of(_, _, _) :-
 
 % rev(List, Reversed): Reversed holds the elements of List in the other
 % order. Reverse the tail. Then use join/3 to put the head at the end.
-rev(_, _) :-
-    throw(not_implemented(rev/2)).
+
+% Base case: an empty list reversed is still empty
+rev([], []).
+% Recursive case: split the list into head H and tail T.
+rev([H|T], R) :-
+    % First reverse the tail. RT is the reversed tail.
+    rev(T, RT),
+    % Then stick the head H onto the end of RT.
+    %join(RT, [H], R) means: R is RT followed by [H].
+    join(RT, [H], R).
 
 % last_of(List, X): X is the last element of List. The empty list has no
 % last element, so last_of([], X) must fail.
-last_of(_, _) :-
-    throw(not_implemented(last_of/2)).
+
+% Base case: a list with exactly one element. That element is the last one.
+last_of([X], X).
+% Recursive case: throw away the head and look for the last of the tail.
+% [] matches neither clause, so last_of([], X) fails, as required.
+last_of([_|T], X) :-
+    last_of(T, X).
 
 %%% R3 -- the graph.
 
@@ -54,9 +67,27 @@ last_of(_, _) :-
 % order, following edge/2 and never visiting a node twice. A route from a
 % node to itself is [From].
 %
-% reach_r/2 in cases/kb.pl walks the same graph and never ends, because
-% the cycle a -> b -> c -> a always offers one more edge. Carry the nodes
-% you visited. Refuse to step onto one again. \+ Goal is true when Goal
-% cannot be proved. That is how you say "not yet visited."
-route(_, _, _) :-
-    throw(not_implemented(route/3)).
+% This is the public predicate. It starts the walk with [From] as the only
+% visited node, then fixes the order of the answer.
+route(From, To, Path) :-
+    % route_/4 does the real walking. RevPath comes back backwards
+    % (newest node first), because we add node to the front as we go.
+    route_(From, To, [From], RevPath),
+    % Flip it so the path reads From -> ... -> To.
+    rev(RevPath, Path).
+
+% route_(Current, Target, Visited, Result): helper that carries the list of
+% nodes already visited (newest first).
+
+% Base case: we are already at the target (same name in both spots).
+% Stop, and hand back the visited list as the result.
+route_(To, To, Visited, Visited).
+% Recursive case: take one more step.
+route_(From, To, Visited, Path) :-
+    % Pick a node Next that has an edge from the current node.
+    edge(From, Next),
+    % \+ means "cannot be proved". This line says Next must not already be
+    % in Visited. This is what stops the a -> b -> c -> a loop.
+    \+ elem(Next, Visited),
+    % Move to Next, and add it to the front of the visited list.
+    route_(Next, To, [Next|Visited], Path).
