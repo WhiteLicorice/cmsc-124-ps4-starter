@@ -35,13 +35,14 @@ descendant(_, _) :-
 
 % count_of(X, List, N): X occurs N times in List. N is 0 for the empty
 % list, which is your base case.
-count_of(_, _, _) :-
-    throw(not_implemented(count_of/3)).
+count_of(_, [], 0).
+count_of(X, [X|T], N) :- count_of(X, T, M), N is M + 1.
+count_of(X, [Z|T], N) :-  X \= Z, count_of(X, T, N).
 
 % rev(List, Reversed): Reversed holds the elements of List in the other
 % order. Reverse the tail. Then use join/3 to put the head at the end.
-rev(_, _) :-
-    throw(not_implemented(rev/2)).
+rev([], []).
+rev([H|T], R) :- rev(T, RT), join(RT, [H], R).
 
 % last_of(List, X): X is the last element of List. The empty list has no
 % last element, so last_of([], X) must fail.
