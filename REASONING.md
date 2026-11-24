@@ -46,6 +46,8 @@ The answer is `false` since there is no complex term `parent` in the knowledge b
 
 Prolog would return `true` since the unification of a atom, constant, or complex term and a variable would always return `true` since the variable would be instantiated into the atom, constant or complex term.
 
+Correction: If the program does not cite the knowledge base, then the grader would return the unifications where the conditions stated inside the input would be satisfied. In this case, the query returns `X=f(b,a,Y=b)` instead of `true`
+
 ## P05
 
 Write one to three sentences here. Name the rule that fixes each field.

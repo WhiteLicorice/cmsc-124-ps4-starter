@@ -2,7 +2,7 @@ id	first	second	count
 P01	x=liz	x=bob	2
 P02	true	none	1
 P03	false	none	0
-P04	true	none	1
+P04	X=f(b,a),Y=b	none	1
 P05	TODO	TODO	TODO
 P06	TODO	TODO	TODO
 P07	TODO	TODO	TODO
