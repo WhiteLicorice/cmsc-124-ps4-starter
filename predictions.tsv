@@ -3,7 +3,7 @@ P01	x=liz	x=bob	2
 P02	true	none	1
 P03	false	none	0
 P04	X=f(b,a),Y=b	none	1
-P05	unbound	none	0
+P05	X=a,Y=b	none	1
 P06	TODO	TODO	TODO
 P07	TODO	TODO	TODO
 P08	TODO	TODO	TODO

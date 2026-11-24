@@ -32,7 +32,7 @@ nothing and the search ends after one answer.
 
 ## P01
 
-Since `X` is a variable, the program searches the knowledge base for the first valid match of the of the parent functor with `tom` as the first value. Prolog finds `liz` first in the knowledge base and is returned by the program. `;` as an `or` operator, checks for additional matches and thus finds `bob` then stops there and returns `false` since no more matches exist.
+Since `X` is a variable, the program searches the knowledge base for the first valid match of the of the `parent` functor with `tom` as the first value. Prolog finds `liz` first in the knowledge base and is returned by the program. `;` as an `or` operator, checks for additional matches and thus finds `bob` then stops there and returns `false` since no more matches exist.
 
 ## P02
 
@@ -40,7 +40,7 @@ Since `X` is a variable, the program searches the knowledge base for the first v
 
 ## P03
 
-The answer is `false` since there is no complex term `parent` in the knowledge base that contains `tom` and `bob` as its arguments.
+The answer is `false` since there is no functor `parent` in the knowledge base that contains `tom` and `bob` as its arguments.
 
 ## P04
 
@@ -51,6 +51,8 @@ Correction: If the program does not cite the knowledge base, then the grader wou
 ## P05
 
 The grader would return an `unbound` since an infinite recursion would occur. Since `X` would be instantiated into `f(a, Y)` and `Y` would be instantiated into `f(X, b)`, it would infinitely try to substitute the variables for each depth leading to memory running out in older versions of Prolog or being cut short by modern ones.
+
+Correction: If two complex terms are tried to be unified, Prolog first checks if both have the same functor and arity. Since both `f(X, b)` and `f(a, Y)` satisfies the conditions, Prolog checks the unification of each corresponding argument, in this case by instantiating the variables of one side to the atoms of the other before finally returning the instantiated values of the variables.
 
 ## P06
 
