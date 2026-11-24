@@ -62,7 +62,7 @@ Correction: The output is a boolean `false`.
 
 ## P07
 
-Write one to three sentences here. Name the rule that fixes each field.
+The `grandparent` is a rule with it being the head and `parent(G, P), parent(P, C)` as its body. In the knowledge base, there are two items that the variable X could take to satisfy the rule. The two items are reflected under `P07` of `predictions.tsv`
 
 ## P08
 
