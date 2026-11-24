@@ -56,7 +56,11 @@ The `=` operator attempts to unify the atom `a` with the atom `b` and returns `f
 
 ## P07
 
-`grandparent(tom, X)` unifies `G=tom` and `C=X.` Then it starts with `parent(tom, P)` and gets `P=liz;P=bob` and then starts by unifying `P=liz` then queries `parent(liz, X)`,nothing returns. So then it goes back to the `;` to bind `P=bob` then queries `parent(bob, X)` where it eventually gets to return `X=ann;X=pat` and takes 6 counts to return false because Prolog always starts from the top down of the facts when doing a query.
+`grandparent(tom, X)` unifies `G=tom` and `C=X.` Then it starts with `parent(tom, P)` and gets `P=liz;P=bob` and then starts by unifying `P=liz` then queries `parent(liz, X)`,nothing returns. So then it goes back to the `;` to bind `P=bob` then queries `parent(bob, X)` where it eventually gets to return `X=ann;X=pat` and ~~takes 6 counts to return false because Prolog always starts from the top down of the facts when doing a query~~.
+
+## Correction  
+
+It returns `X=ann;X=pat` after it gets `false` on the second count when reaching `parent(pat, jim)`. My mind was on the ancestor call when I wrote the intial reasoning
 
 ## P08
 

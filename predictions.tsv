@@ -5,7 +5,7 @@ P03	false	none	0
 P04	X=f(b,a),Y=b	none	1
 P05	X=a,Y=b	none	1
 P06	false	none	0
-P07	X=ann	X=pat	6
+P07	X=ann	X=pat	2
 P08	X=liz	X=bob	6
 P09	TODO	TODO	TODO
 P10	TODO	TODO	TODO
