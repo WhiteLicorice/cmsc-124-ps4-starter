@@ -68,33 +68,33 @@ Prolog reads from top down so the first two reports will be `X=liz` and `X=bob` 
 
 ## P09
 
-Write one to three sentences here. Name the rule that fixes each field.
+I think the recursive clause being first means it goes farther down the family tree before giving Tom's direct kids. So I expect Sue and then Jim first. I might have the order after that mixed up, but there should be six answers total.
 
 ## P10
 
-Write one to three sentences here. Name the rule that fixes each field.
+The first clause checks direct parents, so Pat should be the first value for X. Then the recursive clause looks up the tree; I think Tom comes before Bob since the parent facts start with Tom. Three answers altogether.
 
 ## P11
 
-Write one to three sentences here. Name the rule that fixes each field.
+This looks like bad recursion to me: `reach/2` calls itself before it even checks an edge. I don't think it gets far enough to find d, and expect it to keep searching without giving an answer.
 
 ## P12
 
-Write one to three sentences here. Name the rule that fixes each field.
+`reach_r/2` checks an edge first, so it can get from a to d. But the graph loops back around, and I don't see anything that stops it trying the loop again. I expect it to give an answer and then keep searching when I ask for more.
 
 ## P13
 
-Write one to three sentences here. Name the rule that fixes each field.
+This looks like counting the list one item at a time. There are three items, so N should be 3. I think there's just one answer.
 
 ## P14
 
-Write one to three sentences here. Name the rule that fixes each field.
+`join/3` can split `[1,2]` before the first item, between the items, or after the last one. So the first result should use an empty X and the next should have `[1]` in X. Looks like three splits total.
 
 ## P15
 
-Write one to three sentences here. Name the rule that fixes each field.
+In Python I'd expect this comparison to complain too if X wasn't assigned yet. Since `X > 2` comes before `elem/2`, I think Prolog errors instead of trying the list first.
 
 ## P16
 
-Write one to three sentences here. Name the rule that fixes each field.
+Here `elem/2` runs first, so it tries 1, 2, and 3 for X. The comparison should filter out the first two, leaving X=3 as the only answer.
 
