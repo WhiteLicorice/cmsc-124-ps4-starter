@@ -58,6 +58,8 @@ Correction: If two complex terms are tried to be unified, Prolog first checks if
 
 `a` and `b` are different atoms. Trying to unify the two values would produce no value.
 
+Correction: The output is a boolean `false`.
+
 ## P07
 
 Write one to three sentences here. Name the rule that fixes each field.
