@@ -32,11 +32,11 @@ nothing and the search ends after one answer.
 
 ## P01
 
-Since X is a variable, the program searches the knowledge base for the first valid match of the of the parent functor with 'tom' as the first value. Prolog finds 'liz' first in the knowledge base and is returned by the program. `;` as an `or` operator, checks for additional matches and thus finds 'bob' then stops there and returns `false` since no more matches exist.
+Since ```X``` is a variable, the program searches the knowledge base for the first valid match of the of the parent functor with ```tom``` as the first value. Prolog finds ```liz``` first in the knowledge base and is returned by the program. `;` as an `or` operator, checks for additional matches and thus finds ```bob``` then stops there and returns `false` since no more matches exist.
 
 ## P02
 
-Write one to three sentences here. Name the rule that fixes each field.
+```parent(tom, bob)``` is a complex term that exists in the knowledge base and would thus return true. Since there are no variables involved, then there is no answer produced after a ```;``` .
 
 ## P03
 
