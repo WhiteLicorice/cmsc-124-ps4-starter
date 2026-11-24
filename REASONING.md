@@ -44,7 +44,7 @@ The answer is `false` since there is no complex term `parent` in the knowledge b
 
 ## P04
 
-Write one to three sentences here. Name the rule that fixes each field.
+Prolog would return `true` since the unification of a atom, constant, or complex term and a variable would always return `true` since the variable would be instantiated into the atom, constant or complex term.
 
 ## P05
 
