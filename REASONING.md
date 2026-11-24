@@ -50,7 +50,7 @@ Correction: If the program does not cite the knowledge base, then the grader wou
 
 ## P05
 
-Write one to three sentences here. Name the rule that fixes each field.
+The grader would return an `unbound` since an infinite recursion would occur. Since `X` would be instantiated into `f(a, Y)` and `Y` would be instantiated into `f(X, b)`, it would infinitely try to substitute the variables for each depth leading to memory running out in older versions of Prolog or being cut short by modern ones.
 
 ## P06
 
