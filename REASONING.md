@@ -44,6 +44,8 @@ Correction: `;` is not an `or` operator in this use case which is after the quer
 
 The answer is `false` since there is no functor `parent` in the knowledge base that contains `tom` and `bob` as its arguments.
 
+Correction: the predictions here are correct, but for the wrong reasons; `tom` is the 2nd argument here, while X is the first. So we are trying to find `tom`'s parent, but in the knowledge base `tom` is the root. In the unification rules we are comparing 2 different atoms, `tom` as the 2nd argument againsts each facts 2nd argument produces no such fact, as such querying returns `false` since it cant match anything. we have `none` and `0` since nothing is returned.
+
 ## P04
 
 Prolog would return `true` since the unification of a atom, constant, or complex term and a variable would always return `true` since the variable would be instantiated into the atom, constant or complex term.
