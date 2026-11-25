@@ -72,6 +72,8 @@ The `grandparent` is a rule with it being the head and `parent(G, P), parent(P, 
 
 By reversing the base case and the recursive case, the program would output the deepest value first for a particular branch. `liz` is the deepest descendant of her lineage which is why she is the first output. On the other hand, `sue` is the deepest descendant of `bob`'s lineage which is why she is the value of `X` in the second output.
 
+Correction: `liz` is not the first output since the parent checks occur inside the the recursive case. Since `P = liz` fails there, `parent(tom, p)` checks the next qualifying arguments and finds `bob` and recurses from there. 
+
 ## P10
 
 Write one to three sentences here. Name the rule that fixes each field.

@@ -7,7 +7,7 @@ P05	X=a,Y=b	none	1
 P06	false	none	0
 P07	X=ann	X=pat	2
 P08	X=liz	x=bob	6
-P09	X=liz	X=sue	6
+P09	X=sue	X=jim	6
 P10	TODO	TODO	TODO
 P11	TODO	TODO	TODO
 P12	TODO	TODO	TODO
