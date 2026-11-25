@@ -72,6 +72,8 @@ The `grandparent` is a rule with it being the head and `parent(G, P), parent(P, 
 
 `P08` demonstrates recursion since a functor calls itself inside its body. `liz` and `bob` are the first and second outputs since they are able to satisfy the base case immediately. In the background, Prolog is able to check the other entries of `parent` and all satisfying the `ancestor` rule.
 
+Correction: `x=bob` to `X=bob`, 2nd field was  a lowercase x instead of uppercase, which makes it so `x` does not read as variable since it's not uppercase `X`.
+
 ## P09
 
 By reversing the base case and the recursive case, the program would output the deepest value first for a particular branch. `liz` is the deepest descendant of her lineage which is why she is the first output. On the other hand, `sue` is the deepest descendant of `bob`'s lineage which is why she is the value of `X` in the second output.
