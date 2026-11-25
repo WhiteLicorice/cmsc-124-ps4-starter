@@ -104,5 +104,5 @@ Write one to three sentences here. Name the rule that fixes each field.
 
 ## P16
 
-Write one to three sentences here. Name the rule that fixes each field.
+The condition `X > 2` filters the allowed value of `X` from the list to only be greater than `2`. In this case, `3` is the only allowable value.
 
