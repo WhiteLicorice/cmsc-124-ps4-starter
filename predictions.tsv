@@ -11,7 +11,7 @@ P09	X=sue	X=jim	6
 P10	X=pat	X=tom	3
 P11	unbounded	unbounded	unbounded
 P12	true	true	unbounded
-P13	TODO	TODO	TODO
+P13	N=3	none	1
 P14	TODO	TODO	TODO
 P15	TODO	TODO	TODO
 P16	TODO	TODO	TODO

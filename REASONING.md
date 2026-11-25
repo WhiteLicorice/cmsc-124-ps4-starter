@@ -92,7 +92,7 @@ Prolog checks first if there is an existing direct edge between `a` and `d`, the
 
 ## P13
 
-Write one to three sentences here. Name the rule that fixes each field.
+`P13` is an example of a recursive count. Prolog recurses in `len(T, M)` until it reaches an empty list where it would set the value of `M` to `0`. Then as it goes upwards the recursion calls, it would increment by `1` due to `N is M + 1`.
 
 ## P14
 
