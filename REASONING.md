@@ -86,6 +86,8 @@ Correction: `liz` is not the first output since the parent checks occur inside t
 
 Correction: In the recursion case, since `P` is not yet instantiated but `X` is present, then Prolog would would check the first instance of `parent(X, _)`, which is `parent(tom, liz)` and start from there.
 
+Correction: The recursion works its way top to bottom not bottom to top. `tom`'s facts come first and thus bind first, `bob` binds in another branch. The recursive clause picks candidates from `parent(X, P)` in source order. `count` is 3 since `bob` is reached later on.
+
 ## P11
 
 The particular case would recurse infinitely since Prolog checks the recursive call first and thus would not terminate. `reach(a, d)` would call on `reach(a, b)` which would first call on `reach(a, b)` triggering an infinite recursive loop.
