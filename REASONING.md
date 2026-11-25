@@ -82,7 +82,7 @@ Correction: In the recursion case, since `P` is not yet instantiated but `X` is 
 
 ## P11
 
-Write one to three sentences here. Name the rule that fixes each field.
+The particular case would recurse infinitely since Prolog checks the recursive call first and thus would not terminate. `reach(a, d)` would call on `reach(a, b)` which would first call on `reach(a, b)` triggering an infinite recursive loop.
 
 ## P12
 
