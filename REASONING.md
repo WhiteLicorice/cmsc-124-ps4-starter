@@ -34,6 +34,8 @@ nothing and the search ends after one answer.
 
 Since `X` is a variable, the program searches the knowledge base for the first valid match of the of the `parent` functor with `tom` as the first value. Prolog finds `liz` first in the knowledge base and is returned by the program. `;` as an `or` operator, checks for additional matches and thus finds `bob` then stops there and returns `false` since no more matches exist.
 
+Correction: `;` is not an `or` operator in this use case which is after the query prompt. This is why Prolog returns `bob`, since when used in this context `;` backtracks to find another match.
+
 ## P02
 
 `parent(tom, bob)` is a complex term that exists in the knowledge base and would thus return `true`. Since there are no variables involved, then there is no answer produced after a `;` .
