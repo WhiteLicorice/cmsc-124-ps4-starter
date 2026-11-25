@@ -47,7 +47,7 @@ rev([H|T], R) :- rev(T, RT), join(RT, [H], R).
 % last_of(List, X): X is the last element of List. The empty list has no
 % last element, so last_of([], X) must fail.
 last_of([X], X).
-last_of([H|T], X) :- last_of(T, X).
+last_of([_|T], X) :- last_of(T, X).
 
 %%% R3 -- the graph.
 
@@ -59,5 +59,9 @@ last_of([H|T], X) :- last_of(T, X).
 % the cycle a -> b -> c -> a always offers one more edge. Carry the nodes
 % you visited. Refuse to step onto one again. \+ Goal is true when Goal
 % cannot be proved. That is how you say "not yet visited."
-route(_, _, _) :-
-    throw(not_implemented(route/3)).
+route(S, D, P) :- travel(S, D, [S], P).
+travel(S, S, _, [S]).
+travel(S, D, V, [S|PT]) :-
+    edge(S, Z),
+    \+ elem(Z, V),
+    travel(Z, D, [Z|V], PT).
