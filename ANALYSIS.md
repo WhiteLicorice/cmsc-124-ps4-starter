@@ -49,3 +49,14 @@ Prolog the real pop is `Fail`, because a goal only fails when it has no
 clauses left, so nothing can come back to it. You can see the frames getting
 popped from the inside out at the bottom of the trace: `len([],_)`, then
 `len([c],_)`, then `len([b,c],_)`, and last `len([a,b,c],N)`.
+
+The part that surprised me is that an `Exit` does not throw the frame away.
+When I asked for a second answer, the trace prints `Redo: len([a,b,c],3)` and
+walks back down into frames that had already exited. In Activity 15, once a
+function returns, its activation record is gone, along with its locals and
+its place in the code. Prolog keeps a choice point instead, which remembers
+which clause the goal used and what it bound, so `Redo` can go back and try
+the next clause. For `len([],0)` that next clause is `len([_|T],N)`, which
+can't match `[]`, so it fails. The `is` goals have no other way to succeed
+either, so each one fails right after its `Redo`. That's why `N=3` is the
+only answer and the search ends.
