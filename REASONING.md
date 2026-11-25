@@ -76,7 +76,7 @@ Correction: `liz` is not the first output since the parent checks occur inside t
 
 ## P10
 
-Write one to three sentences here. Name the rule that fixes each field.
+`P10` checks the ancestors of `jim` and finds `pat` first via the base case. From there, Prolog also checks the `parent` of `pat` through through the recursion and then a base case condition and finds `bob`. The logic works it way up since the recurse case can't find a value for `P` and needs to check `ancestor(P, D)` first before checking `parent(A, P)`.
 
 ## P11
 
