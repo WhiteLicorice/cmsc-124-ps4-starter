@@ -104,6 +104,8 @@ Prolog checks first if there is an existing direct edge between `a` and `d`, the
 
 Correction: The functor transfers the values of the list towards the variable `X`. Since `X` is not instantiated, then it would assume the value of an empty list when `join` is first called, thus returning `X=[],Y=[1,2]`. However, by the second run, `X` already contains an empty list and thus the transfer through `H` can be done.
 
+Correction: `X` binding is undone on backtracking, and is not shared throughout the entire query. It traces all valid branches with its own `X` bindings and does not see what other branches bind `X` to. first comes from the `join([],L,L)` since it is tried first, `3` count since there's 3 answers that come from different branches of valid joins (3rd answer not shown here), second has the 2nd value returned.
+
 ## P15
 
 This case would return an error since comparison requires that both sides must be instantiated into integers first before comparison.
