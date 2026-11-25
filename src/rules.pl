@@ -55,8 +55,9 @@ rev([H|T], Reversed) :-
 
 % last_of(List, X): X is the last element of List. The empty list has no
 % last element, so last_of([], X) must fail.
-last_of(_, _) :-
-    throw(not_implemented(last_of/2)).
+last_of([_|T], X) :-
+    last_of(T, X).
+last_of([Y], Y).
 
 %%% R3 -- the graph.
 
