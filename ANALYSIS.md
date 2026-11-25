@@ -36,15 +36,16 @@ Fail: len([a,b,c],N)
 == 1 answer ==
 ```
 
-## Your explanation (300–450 words)
+## Explanation
 
-Write this section in your own words. Use the trace above as evidence and
-connect it to the rules you wrote in `src/rules.pl`. Be sure to explain:
-
-- Which `Call`, `Exit`, and `Fail` lines correspond to stack frames being
-  pushed and popped.
-- What the `Redo` ports resume that a returned Activity 15 frame has already
-  discarded.
-- Why recursive `reach/2` can recurse without consuming an edge, while each
-  recursive `ancestor/2` step consumes a parent fact. Relate that difference
-  to clause order, and briefly connect it to your R1 `descendant/2` rule.
+I think of every `Call` line as pushing a new frame onto the stack, the same
+way a function call does in Activity 15. In the P13 trace the indentation
+shows it: `len([a,b,c],N)` calls `len([b,c],_)`, which calls `len([c],_)`,
+which calls `len([],_)`, so four frames are stacked before anything comes
+back. The `is` goals also get their own short frame. `Exit` is where a goal
+returns its answer to the caller, like `len([],0)` handing back 0 so
+`_ is 0+1` can compute 1. In a language like C that would be the pop. In
+Prolog the real pop is `Fail`, because a goal only fails when it has no
+clauses left, so nothing can come back to it. You can see the frames getting
+popped from the inside out at the bottom of the trace: `len([],_)`, then
+`len([c],_)`, then `len([b,c],_)`, and last `len([a,b,c],N)`.
