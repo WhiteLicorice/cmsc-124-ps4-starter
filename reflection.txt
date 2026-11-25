@@ -1,0 +1,1 @@
+﻿I wrote R1 and R2. For P08, my prediction of count was 4 and stopped at liz, bob, ann, and pat, but the second clause of ancestor/2 calls ancestor/2 recursively, so it keeps following parent links past ann and pat rather than stopping at two generations. One part my partner explained to me was the graph portion of the .pl file.
