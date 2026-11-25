@@ -48,8 +48,10 @@ count_of(X, [H|T], N) :-
 
 % rev(List, Reversed): Reversed holds the elements of List in the other
 % order. Reverse the tail. Then use join/3 to put the head at the end.
-rev(_, _) :-
-    throw(not_implemented(rev/2)).
+rev([], []).
+rev([H|T], Reversed) :-
+    rev(T, Rev),
+    join(Rev, [H], Reversed).
 
 % last_of(List, X): X is the last element of List. The empty list has no
 % last element, so last_of([], X) must fail.
