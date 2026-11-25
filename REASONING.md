@@ -98,6 +98,8 @@ Prolog checks first if there is an existing direct edge between `a` and `d`, the
 
 `join` in this particular case takes the head of `[1, 2]` and returns it to `X` while `Y` would contain the value of the tail `[2]`. The variable `X` would match its value of `H` to the `H` in `[H|R]` making it equal to `1` and its tail would be `[]`. Lastly, the base case copies the tail of `[H|R]` to `L` and then to `Y`.
 
+Correction: The functor transfers the values of the list towards the variable `X`. Since `X` is not instantiated, then it would assume the value of an empty list when `join` is first called, thus returning `X=[],Y=[1,2]`. However, by the second run, `X` already contains an empty list and thus the transfer through `H` can be done.
+
 ## P15
 
 This case would return an error since comparison requires that both sides must be instantiated into integers first before comparison.
