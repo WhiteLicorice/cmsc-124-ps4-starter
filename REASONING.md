@@ -100,7 +100,7 @@ Write one to three sentences here. Name the rule that fixes each field.
 
 ## P15
 
-Write one to three sentences here. Name the rule that fixes each field.
+This case would return an error since comparison requires that both sides must be instantiated into integers first before comparison.
 
 ## P16
 
