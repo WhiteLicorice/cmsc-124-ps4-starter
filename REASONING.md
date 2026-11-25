@@ -96,7 +96,7 @@ Prolog checks first if there is an existing direct edge between `a` and `d`, the
 
 ## P14
 
-Write one to three sentences here. Name the rule that fixes each field.
+`join` in this particular case takes the head of `[1, 2]` and returns it to `X` while `Y` would contain the value of the tail `[2]`. The variable `X` would match its value of `H` to the `H` in `[H|R]` making it equal to `1` and its tail would be `[]`. Lastly, the base case copies the tail of `[H|R]` to `L` and then to `Y`.
 
 ## P15
 
