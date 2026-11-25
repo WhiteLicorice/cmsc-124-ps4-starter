@@ -10,7 +10,7 @@ P08	X=liz	x=bob	6
 P09	X=sue	X=jim	6
 P10	X=pat	X=tom	3
 P11	unbounded	unbounded	unbounded
-P12	TODO	TODO	TODO
+P12	true	true	unbounded
 P13	TODO	TODO	TODO
 P14	TODO	TODO	TODO
 P15	TODO	TODO	TODO

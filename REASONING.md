@@ -88,7 +88,7 @@ Correction: Fix prediction answers for unbounded case, all three fields must con
 
 ## P12
 
-Write one to three sentences here. Name the rule that fixes each field.
+Prolog checks first if there is an existing direct edge between `a` and `d`, then goes to the recursion case since it finds none. The direct edge checking continues until it sees `edge(c, d)` where it returns `true`. The next result would start the entire process from `reach_r(a, d)` and would return true since `edge(c, d)` exists but its count would be unbound since the entire process can infinitely recurse.
 
 ## P13
 
