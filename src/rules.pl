@@ -22,8 +22,10 @@ sibling(X, Y) :-
     X \= Y.
 
 % cousin(X, Y): a parent of X and a parent of Y are siblings.
-cousin(_, _) :-
-    throw(not_implemented(cousin/2)).
+cousin(X, Y) :-
+    parent(PX, X),
+    parent(PY, Y),
+    sibling(PX, PY).
 
 % descendant(D, A): A is an ancestor of D.
 %
