@@ -66,7 +66,7 @@ The `grandparent` is a rule with it being the head and `parent(G, P), parent(P, 
 
 ## P08
 
-Write one to three sentences here. Name the rule that fixes each field.
+`P08` demonstrates recursion since a functor calls itself inside its body. `liz` and `bob` are the first and second outputs since they are able to satisfy the base case immediately. In the background, Prolog is able to check the other entries of `parent` and all satisfying the `ancestor` rule.
 
 ## P09
 
